@@ -1,9 +1,7 @@
-# About
-This is the demo site for [Fuwari](https://github.com/saicaca/fuwari).
+大地从不喧哗，但她孕育万物。
 
-::github{repo="saicaca/fuwari"}
+这里是 Ytx 的个人博客，记录思考与生活的随笔。仅以我的视角，留下一些真实的痕迹。
 
-> ### Sources of images used in this site
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539) by [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908) by [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
+- X：[@yumoontonxi](https://x.com/yumoontonxi)
+- QQ：1118444
+- Mail：yumoontonxi@gamil.com
