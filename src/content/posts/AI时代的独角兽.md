@@ -2,7 +2,9 @@
 title: 一个人的独角兽
 published: 2026-06-04
 description: AI时代，再度定义
-image: /follow.jpg
+image: /follow1.jpg
+hero: "true"
+heroCaption: 在算法的尽头，痴迷是唯一的护城河
 tags:
   - 随笔
 category: 思考

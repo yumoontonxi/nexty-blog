@@ -1,0 +1,161 @@
+---
+import CommentsStub from "@components/CommentsStub.astro";
+import Markdown from "@components/misc/Markdown.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import SingleColumnLayout from "@layouts/SingleColumnLayout.astro";
+import { profileConfig, siteConfig } from "@/config";
+import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import {
+	estimateReadingMinutes,
+	getNotionPageMarkdown,
+	getNotionPostById,
+	getNotionPosts,
+} from "@utils/notion";
+import MarkdownIt from "markdown-it";
+import sanitizeHtml from "sanitize-html";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const posts = await getNotionPosts();
+	return posts.map((post) => ({
+		params: { id: post.id.replace(/-/g, "") },
+		props: { post },
+	}));
+}
+
+const { id } = Astro.params;
+const { post } = Astro.props;
+
+// 还原横杠：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx → xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+const notionId = (id ?? post.id.replace(/-/g, "")).replace(
+	/^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
+	"$1-$2-$3-$4-$5",
+);
+
+const markdown = await getNotionPageMarkdown(notionId);
+const meta = (await getNotionPostById(notionId)) ?? post;
+
+const parser = new MarkdownIt();
+const htmlContent = markdown
+	? sanitizeHtml(parser.render(markdown), {
+			allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+				"img",
+				"h1",
+				"h2",
+				"h3",
+				"h4",
+				"pre",
+				"code",
+				"blockquote",
+				"ul",
+				"ol",
+				"li",
+				"table",
+				"thead",
+				"tbody",
+				"tr",
+				"th",
+				"td",
+			]),
+		})
+	: "";
+
+const categoryLabel = (meta.tags[0] || i18n(I18nKey.uncategorized)).toUpperCase();
+const dateLabel = formatDateToYYYYMMDD(meta.published);
+const readMinutes = markdown ? estimateReadingMinutes(markdown) : 1;
+const readTimeLabel = `${readMinutes} ${i18n(readMinutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}`;
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: meta.title,
+	description: meta.description || meta.title,
+	keywords: meta.tags,
+	author: {
+		"@type": "Person",
+		name: profileConfig.name,
+		url: Astro.site,
+	},
+	datePublished: formatDateToYYYYMMDD(meta.published),
+	inLanguage: siteConfig.lang.replace("_", "-"),
+};
+---
+
+<SingleColumnLayout title={meta.title} description={meta.description || meta.title}>
+    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+
+    <article class="article-page onload-animation">
+        <header class="article-header">
+            <h1
+                class="article-title"
+                data-pagefind-body
+                data-pagefind-weight="10"
+                data-pagefind-meta="title"
+            >
+                {meta.title}
+            </h1>
+            <p class="article-meta">
+                <span>{dateLabel}</span>
+                <span class="article-meta-sep">·</span>
+                <span>{categoryLabel}</span>
+                <span class="article-meta-sep">·</span>
+                <span>{readTimeLabel}</span>
+            </p>
+        </header>
+
+        {htmlContent ? (
+            <Markdown class="article-content markdown-content onload-animation">
+                <Fragment set:html={htmlContent} />
+            </Markdown>
+        ) : (
+            <p class="article-content text-[var(--text-secondary)]">
+                暂无正文内容，请稍后在 Notion 中补充。
+            </p>
+        )}
+    </article>
+
+    <CommentsStub />
+</SingleColumnLayout>
+
+<style>
+    .article-page {
+        max-width: var(--article-max-width);
+        margin: 0 auto;
+        padding: 3rem 0 2rem;
+        background: var(--bg-primary);
+    }
+
+    .article-meta {
+        font-family: var(--font-text);
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        margin: 16px 0 2.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .article-meta-sep {
+        color: var(--text-tertiary);
+    }
+
+    .article-title {
+        font-family: var(--font-display);
+        font-size: var(--font-size-title);
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        color: var(--text-primary);
+        line-height: 1.25;
+        margin: 0;
+    }
+
+    .article-content {
+        margin-bottom: 2rem;
+    }
+</style>

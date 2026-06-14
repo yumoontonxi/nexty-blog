@@ -35,17 +35,16 @@ export default defineConfig({
 		}),
 		swup({
 			theme: false,
-			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
-			// the default value `transition-` cause transition delay
-			// when the Tailwind class `transition-all` is used
-			containers: ["main", "#toc"],
+			animationClass: "transition-swup-",
+			containers: ["#swup-container", "#toc"],
 			smoothScrolling: true,
-			cache: true,
+			cache: false,
 			preload: true,
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: false,
 			globalInstance: true,
+			ignore: (url) => url.includes("/notion/"),
 		}),
 		icon({
 			include: {
@@ -73,7 +72,7 @@ export default defineConfig({
 			},
 			styleOverrides: {
 				codeBackground: "var(--codeblock-bg)",
-				borderRadius: "0.75rem",
+				borderRadius: "0",
 				borderColor: "none",
 				codeFontSize: "0.875rem",
 				codeFontFamily: "'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
@@ -154,6 +153,7 @@ export default defineConfig({
 		],
 	},
 	vite: {
+		envPrefix: ["VITE_", "NOTION_"],
 		build: {
 			rollupOptions: {
 				onwarn(warning, warn) {

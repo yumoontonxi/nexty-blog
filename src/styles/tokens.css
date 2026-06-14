@@ -1,0 +1,133 @@
+/* Nexty v3 design tokens — Apple HIG Dark Mode */
+:root {
+  /* Background layers */
+  --bg-base: #000000;
+  --bg-primary: #1c1c1e;
+  --bg-secondary: #2c2c2e;
+  --bg-tertiary: #3a3a3c;
+
+  /* Legacy aliases */
+  --bg: var(--bg-base);
+  --background: var(--bg-primary);
+  --background-secondary: var(--bg-secondary);
+  --card-bg: var(--bg-secondary);
+  --page-bg: var(--bg-base);
+
+  /* Hero overlay */
+  --hero-overlay: rgba(92, 7, 1, 0.17);
+
+  /* Text hierarchy */
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #636366;
+  --text-quaternary: #3a3a3c;
+  --text-body: #e5e5e7;
+
+  /* Legacy aliases */
+  --text-muted: var(--text-tertiary);
+
+  /* Separators */
+  --separator: rgba(84, 84, 88, 0.6);
+  --separator-opaque: #38383a;
+  --border: var(--separator-opaque);
+  --border-subtle: rgba(84, 84, 88, 0.3);
+
+  /* Accent */
+  --accent: #f5f5f7;
+  --accent-warm: #d4a0a0;
+  --accent-hover: var(--accent-warm);
+  --accent-gradient: linear-gradient(160deg, #8b4a4a 0%, #c8a0a0 45%, #f5f5f7 100%);
+
+  /* Typography */
+  --font-display: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif;
+  --font-text: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --font-sans: var(--font-display);
+
+  --font-size-hero: clamp(6rem, 14vw, 11rem);
+  --font-size-hero-mobile: clamp(4rem, 14vw, 7rem);
+  --font-size-title: clamp(1.8rem, 3.5vw, 2.5rem);
+  --font-size-body: 17px;
+  --line-height: 1.8;
+  --letter-spacing: 0.01em;
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 0.3s;
+  --duration-fast: 0.15s;
+  --transition-duration: var(--duration);
+  --transition-ease: var(--ease);
+  --page-transition-duration: 0.15s;
+
+  /* Layout */
+  --nav-height: 52px;
+  --sidebar-width: 200px;
+  --sidebar-width-tablet: 160px;
+  --content-gap: 56px;
+  --page-max-width: 1080px;
+  --article-max-width: 680px;
+  --page-padding: 24px;
+  --page-padding-tablet: 32px;
+
+  /* Search */
+  --search-bg: rgba(118, 118, 128, 0.24);
+  --search-radius: 10px;
+
+  /* Navbar scrolled */
+  --nav-scrolled-bg: rgba(0, 0, 0, 0.72);
+
+  --radius-large: 0;
+  --primary: var(--text-primary);
+  --footer-bg: var(--bg-base);
+
+  --row-hover-bg: rgba(255, 255, 255, 0.03);
+  --blockquote-bg: rgba(255, 255, 255, 0.03);
+}
+
+/* Content area — Apple light mode (below hero) */
+.content-area {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f7;
+  --bg-tertiary: #e8e8ed;
+  --bg-base: #ffffff;
+  --background: #ffffff;
+  --background-secondary: #f5f5f7;
+  --card-bg: #f5f5f7;
+  --page-bg: #ffffff;
+  --footer-bg: #ffffff;
+
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #86868b;
+  --text-quaternary: #aeaeb2;
+  --text-body: #1d1d1f;
+  --text-muted: #86868b;
+
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --separator: rgba(0, 0, 0, 0.15);
+  --separator-opaque: #d2d2d7;
+  --border: #d2d2d7;
+
+  --accent: #1d1d1f;
+  --accent-warm: #8b4a4a;
+  --accent-hover: #8b4a4a;
+  --primary: #1d1d1f;
+
+  --row-hover-bg: rgba(0, 0, 0, 0.03);
+  --blockquote-bg: rgba(0, 0, 0, 0.03);
+  --search-bg: rgba(0, 0, 0, 0.06);
+
+  background: #ffffff;
+  color: #1d1d1f;
+}
+
+/* Light navbar (non-hero pages) */
+#navbar.navbar-light {
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #86868b;
+  --search-bg: rgba(0, 0, 0, 0.06);
+  --nav-scrolled-bg: rgba(255, 255, 255, 0.72);
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --row-hover-bg: rgba(0, 0, 0, 0.03);
+  --bg-primary: #ffffff;
+}

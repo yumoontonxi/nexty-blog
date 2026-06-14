@@ -1,0 +1,48 @@
+---
+import BackToTop from "@components/control/BackToTop.astro";
+import Footer from "@components/Footer.astro";
+import Navbar from "@components/Navbar.astro";
+import Layout from "./Layout.astro";
+
+interface Props {
+	title?: string;
+	description?: string;
+	lang?: string;
+	hideTopNav?: boolean;
+}
+
+const {
+	title,
+	description,
+	lang,
+	hideTopNav = false,
+} = Astro.props;
+---
+
+<Layout title={title} description={description} lang={lang}>
+    <slot slot="head" name="head"></slot>
+
+    {!hideTopNav && (
+        <div id="top-row" class="pointer-events-none relative z-50 w-full shrink-0">
+            <div class="pointer-events-auto mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding)]">
+                <Navbar light></Navbar>
+            </div>
+        </div>
+    )}
+
+    <div class="main-panel relative z-30 flex w-full flex-1 flex-col">
+        <div class="content-area flex min-h-[calc(100vh-200px)] flex-1 flex-col">
+            <div class="page-inner mx-auto flex w-full max-w-4xl flex-1 flex-col px-[var(--page-padding)] py-8">
+                <main id="swup-container" class="flex flex-1 flex-col">
+                    <div id="content-wrapper" class="flex flex-1 flex-col">
+                        <slot></slot>
+                        <div class="footer mt-auto">
+                            <Footer></Footer>
+                        </div>
+                    </div>
+                </main>
+                <BackToTop></BackToTop>
+            </div>
+        </div>
+    </div>
+</Layout>

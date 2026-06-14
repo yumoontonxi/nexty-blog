@@ -1,0 +1,145 @@
+---
+const isDev = import.meta.env.DEV;
+---
+
+{isDev && (
+    <>
+        <div id="posts-loading" class="posts-loading" aria-live="polite" aria-busy="false">
+            <p class="posts-loading-text">加载中...</p>
+            <div class="posts-skeleton" aria-hidden="true">
+                {Array.from({ length: 4 }).map(() => (
+                    <div class="posts-skeleton-row">
+                        <div class="posts-skeleton-thumb"></div>
+                        <div class="posts-skeleton-line"></div>
+                        <div class="posts-skeleton-date"></div>
+                    </div>
+                ))}
+            </div>
+        </div>
+        <script is:inline>
+        (function () {
+            const loadingEl = document.getElementById("posts-loading");
+            if (!loadingEl) return;
+
+            function showLoading() {
+                loadingEl.classList.add("is-active");
+                loadingEl.setAttribute("aria-busy", "true");
+            }
+
+            function hideLoading() {
+                loadingEl.classList.remove("is-active");
+                loadingEl.setAttribute("aria-busy", "false");
+            }
+
+            function isPostsUrl(url) {
+                try {
+                    const path = new URL(url, window.location.origin).pathname;
+                    return path === "/posts/" || path.startsWith("/posts/page/");
+                } catch {
+                    return false;
+                }
+            }
+
+            document.addEventListener("click", (event) => {
+                const link = event.target.closest("a[href]");
+                if (!link || link.hasAttribute("data-no-swup")) return;
+                if (isPostsUrl(link.href)) showLoading();
+            });
+
+            function bindSwup() {
+                if (!window.swup?.hooks) return;
+                window.swup.hooks.on("visit:start", (visit) => {
+                    if (isPostsUrl(visit.to.url)) showLoading();
+                });
+                window.swup.hooks.on("visit:end", hideLoading);
+            }
+
+            hideLoading();
+            bindSwup();
+            document.addEventListener("astro:page-load", hideLoading);
+            document.addEventListener("swup:enable", bindSwup);
+        })();
+        </script>
+    </>
+)}
+
+<style>
+    .posts-loading {
+        display: none;
+    }
+
+    .posts-loading.is-active {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: color-mix(in srgb, var(--bg-primary) 92%, transparent);
+        backdrop-filter: blur(4px);
+    }
+
+    .posts-loading-text {
+        margin: 0 0 1rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--text-tertiary);
+    }
+
+    .posts-skeleton {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        width: min(100%, 42rem);
+    }
+
+    .posts-skeleton-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .posts-skeleton-thumb,
+    .posts-skeleton-line,
+    .posts-skeleton-date {
+        background: linear-gradient(
+            90deg,
+            var(--bg-secondary) 25%,
+            var(--bg-tertiary) 50%,
+            var(--bg-secondary) 75%
+        );
+        background-size: 200% 100%;
+        animation: posts-skeleton-shimmer 1.2s ease-in-out infinite;
+        border-radius: 8px;
+    }
+
+    .posts-skeleton-thumb {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+    }
+
+    .posts-skeleton-line {
+        flex: 1;
+        height: 14px;
+    }
+
+    .posts-skeleton-date {
+        width: 72px;
+        height: 12px;
+        flex-shrink: 0;
+    }
+
+    @keyframes posts-skeleton-shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+</style>

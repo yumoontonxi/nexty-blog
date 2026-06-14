@@ -1,25 +1,156 @@
 ---
-
-import { getEntry, render } from "astro:content";
-import Markdown from "@components/misc/Markdown.astro";
+import CommentsStub from "@components/CommentsStub.astro";
+import ImageWrapper from "@components/misc/ImageWrapper.astro";
+import FullWidthLayout from "../layouts/FullWidthLayout.astro";
+import { profileConfig, siteConfig } from "../config";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
 
-const aboutPost = await getEntry("spec", "about");
+const heroBackground =
+	"https://picsum.photos/1920/800?random=soil-hero";
 
-if (!aboutPost) {
-	throw new Error("About page content not found");
+type StoryLayout = "image-left" | "image-right";
+
+interface StorySection {
+	id: string;
+	title: string;
+	layout: StoryLayout;
+	image: string;
+	imageAlt: string;
+	paragraphs: string[];
 }
 
-const { Content } = await render(aboutPost);
+const storySections: StorySection[] = [
+	{
+		id: "who",
+		title: "我是谁",
+		layout: "image-left",
+		image: "https://picsum.photos/800/1000?random=81",
+		imageAlt: "原野上的足迹 — 我是谁",
+		paragraphs: [
+			"我习惯把生活当作一片缓慢呼吸的土壤——不喧哗，却默默承接每一次落脚与回望。",
+			"在技术与日常的交界处，我更像一个记录者：把思考、犹豫、欣喜与沉默，轻轻埋进文字与影像里，等待它们在某一天悄然发芽。",
+			"我不追求喧嚣的表达，只希望留下一些真实的痕迹——像大地记住雨水的方式那样，安静，却足够深刻。",
+		],
+	},
+	{
+		id: "doing",
+		title: "我在做什么",
+		layout: "image-right",
+		image: "https://picsum.photos/900/700?random=82",
+		imageAlt: "微光中的创作 — 我在做什么",
+		paragraphs: [
+			"我写作，把对 AI、创作与时代的观察，整理成可以慢慢阅读的文字；我拍照，留住街角、晨光与暮色里那些容易被忽略的瞬间。",
+			"我也在看女儿的画作——那些未经修饰的颜色与线条，提醒我：表达不必完美，真诚本身就是养分。",
+			"这些碎片彼此连接，构成我此刻的生活地貌：有平坦，有起伏，有裸露的岩石，也有正在积蓄力量的土层。",
+		],
+	},
+	{
+		id: "garden",
+		title: "关于这个数字花园",
+		layout: "image-left",
+		image: "https://picsum.photos/850/950?random=83",
+		imageAlt: "数字花园的土壤 — 网站初衷",
+		paragraphs: [
+			"这个网站是一小块属于我的数字土壤。原野是入口，微光承载思考，留影收藏影像，土壤则安放我为何出发的答案。",
+			"它不提供喧闹的资讯，也不追逐即时的热点；我更想让它像一座可以散步的花园——你可以慢慢走，慢慢读，慢慢看。",
+			"愿每一位路过的旅人，都能在这里带走一点平静，或留下一句温柔的话。大地从不催促，但总会记得你来过的痕迹。",
+		],
+	},
+];
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-            <Markdown class="mt-2">
-                <Content />
-            </Markdown>
-        </div>
-    </div>
-</MainGridLayout>
+
+<FullWidthLayout
+	title={i18n(I18nKey.about)}
+	description={profileConfig.bio || siteConfig.subtitle}
+>
+	<div class="about-page flex min-h-[calc(100vh-200px)] flex-1 flex-grow flex-col">
+		<section
+			class="about-hero relative -mx-[var(--page-padding)] overflow-hidden"
+			aria-label="关于我"
+		>
+			<div
+				class="absolute inset-0 bg-cover bg-center"
+				style={`background-image: url('${heroBackground}');`}
+				role="img"
+				aria-label="土壤与原野风景"
+			></div>
+			<div class="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/75"></div>
+
+			<div class="relative mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center sm:px-8 sm:py-24 md:py-28">
+				<div class="mb-8 h-28 w-28 overflow-hidden rounded-full ring-4 ring-white/15 shadow-2xl sm:h-32 sm:w-32">
+					{profileConfig.avatar && (
+						<ImageWrapper
+							src={profileConfig.avatar}
+							alt={profileConfig.name}
+							class="h-full w-full object-cover"
+						/>
+					)}
+				</div>
+
+				<h1 class="text-4xl font-light tracking-wide text-white sm:text-5xl md:text-6xl">
+					{profileConfig.name}
+				</h1>
+				<p class="mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
+					{siteConfig.subtitle}
+				</p>
+				<p class="mt-3 text-sm tracking-widest text-white/50">
+					{profileConfig.bio}
+				</p>
+			</div>
+		</section>
+
+		<div class="mx-auto flex w-full max-w-5xl flex-1 flex-col py-16 sm:py-20">
+			<section class="space-y-20 sm:space-y-24" aria-label="个人故事">
+				{storySections.map((section) => (
+					<article
+						class:list={[
+							"story-block flex flex-col items-stretch gap-8 md:gap-10 lg:gap-12",
+							section.layout === "image-right"
+								? "md:flex-row-reverse"
+								: "md:flex-row",
+						]}
+					>
+						<div class="w-full flex-shrink-0 md:w-1/3">
+							<div class="overflow-hidden rounded-xl bg-[var(--bg-secondary)] shadow-sm">
+								<img
+									src={section.image}
+									alt={section.imageAlt}
+									class="block h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.02]"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+						</div>
+
+						<div class="flex w-full flex-col justify-center md:w-2/3">
+							<h2 class="mb-5 text-2xl font-light tracking-wide text-[var(--text-primary)]">
+								{section.title}
+							</h2>
+							<div class="prose prose-base dark:prose-invert max-w-none !prose-p:my-0 !prose-p:leading-relaxed !prose-p:text-[var(--text-body)] !prose-headings:text-[var(--text-primary)] space-y-4">
+								{section.paragraphs.map((paragraph) => (
+									<p>{paragraph}</p>
+								))}
+							</div>
+						</div>
+					</article>
+				))}
+			</section>
+
+			<CommentsStub />
+		</div>
+	</div>
+</FullWidthLayout>
+
+<style>
+	.about-hero {
+		margin-top: -2rem;
+	}
+
+	@media (min-width: 768px) {
+		.story-block img {
+			min-height: 18rem;
+			max-height: 28rem;
+		}
+	}
+</style>

@@ -59,7 +59,7 @@ function hidePanel() {
 
 <!-- z-50 make the panel higher than other float panels -->
 <div class="relative z-50" role="menu" tabindex="-1" onmouseleave={hidePanel}>
-    <button aria-label="Light/Dark Mode" role="menuitem" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch" onclick={toggleScheme} onmouseenter={showPanel}>
+    <button aria-label="Light/Dark Mode" role="menuitem" class="glass-control relative flex h-11 w-11 items-center justify-center" id="scheme-switch" onclick={toggleScheme} onmouseenter={showPanel}>
         <div class="absolute" class:opacity-0={mode !== LIGHT_MODE}>
             <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
@@ -72,23 +72,23 @@ function hidePanel() {
     </button>
 
     <div id="light-dark-panel" class="hidden lg:block absolute transition float-panel-closed top-11 -right-2 pt-5" >
-        <div class="card-base float-panel p-2">
-            <button class="flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95 mb-0.5"
-                    class:current-theme-btn={mode === LIGHT_MODE}
+        <div class="float-panel p-2">
+            <button class="theme-panel-btn mb-0.5"
+                    class:theme-panel-btn-active={mode === LIGHT_MODE}
                     onclick={() => switchScheme(LIGHT_MODE)}
             >
-                <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
+                <Icon icon="material-symbols:wb-sunny-outline-rounded" class="mr-3 text-[1.25rem]"></Icon>
                 {i18n(I18nKey.lightMode)}
             </button>
-            <button class="flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95 mb-0.5"
-                    class:current-theme-btn={mode === DARK_MODE}
+            <button class="theme-panel-btn mb-0.5"
+                    class:theme-panel-btn-active={mode === DARK_MODE}
                     onclick={() => switchScheme(DARK_MODE)}
             >
-                <Icon icon="material-symbols:dark-mode-outline-rounded" class="text-[1.25rem] mr-3"></Icon>
+                <Icon icon="material-symbols:dark-mode-outline-rounded" class="mr-3 text-[1.25rem]"></Icon>
                 {i18n(I18nKey.darkMode)}
             </button>
-            <button class="flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95"
-                    class:current-theme-btn={mode === AUTO_MODE}
+            <button class="theme-panel-btn"
+                    class:theme-panel-btn-active={mode === AUTO_MODE}
                     onclick={() => switchScheme(AUTO_MODE)}
             >
                 <Icon icon="material-symbols:radio-button-partial-outline" class="text-[1.25rem] mr-3"></Icon>
@@ -97,3 +97,27 @@ function hidePanel() {
         </div>
     </div>
 </div>
+
+<style>
+    .theme-panel-btn {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.5rem 0.75rem;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: rgba(255, 255, 255, 0.45);
+        background: transparent;
+        border: 1px solid transparent;
+        transition: color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .theme-panel-btn:hover,
+    .theme-panel-btn-active {
+        color: rgba(165, 243, 252, 0.9);
+        background: rgba(34, 211, 238, 0.06);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+</style>

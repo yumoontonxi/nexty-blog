@@ -2,62 +2,101 @@
 
 @layer components {
     .card-base {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
+        @apply overflow-hidden bg-[var(--card-bg)] transition;
+        border-radius: 0;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
     .card-shadow {
-        @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)]
+        @apply drop-shadow-none;
     }
     .expand-animation {
-        @apply relative before:ease-out before:transition active:bg-none hover:before:bg-[var(--btn-plain-bg-hover)] active:before:bg-[var(--btn-plain-bg-active)] z-0
-        before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10
+        @apply relative z-0;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
+    }
+    .expand-animation::before {
+        display: none;
     }
     .link {
-        @apply transition rounded-md p-1 -m-1 expand-animation;
+        @apply transition rounded-none p-1 -m-1;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
     .link-lg {
-        @apply transition rounded-md p-1.5 -m-1.5 expand-animation;
+        @apply transition rounded-none p-1 -m-1;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
+    .glass-surface {
+        @apply backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-none;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
+    }
+
+    .glass-control {
+        @apply backdrop-blur-md bg-white/[0.04] border border-white/10 text-white/45
+        hover:text-cyan-200/90 hover:border-cyan-400/25 hover:bg-cyan-500/[0.08]
+        transition-all duration-300;
+        border-radius: 0;
+    }
+
+    .glass-control:hover :is(svg, [class*="icon"]) {
+        color: rgba(165, 243, 252, 0.9);
+    }
+
     .float-panel {
-        @apply top-[5.25rem] rounded-[var(--radius-large)] overflow-hidden bg-[var(--float-panel-bg)] transition shadow-xl dark:shadow-none
+        @apply glass-surface top-[4rem] overflow-hidden transition;
+        border-radius: 0;
     }
     .float-panel-closed {
-        @apply -translate-y-1 opacity-0 pointer-events-none
+        @apply opacity-0 pointer-events-none;
+        transform: none;
     }
     .search-panel mark {
-        @apply bg-transparent text-[var(--primary)]
+        @apply bg-transparent text-[var(--text-primary)]
     }
 
     .btn-card {
         @apply transition flex items-center justify-center bg-[var(--card-bg)] hover:bg-[var(--btn-card-bg-hover)]
-        active:bg-[var(--btn-card-bg-active)]
+        active:bg-[var(--btn-card-bg-active)];
+        border-radius: 0;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
     .btn-card.disabled {
-        @apply pointer-events-none text-black/10 dark:text-white/10
+        @apply pointer-events-none text-[var(--text-muted)]
     }
     .btn-plain {
         @apply transition relative flex items-center justify-center bg-none
-        text-black/75 hover:text-[var(--primary)] dark:text-white/75 dark:hover:text-[var(--primary)];
-        &:not(.scale-animation) {
-            @apply hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]
-        }
-        &.scale-animation {
-            @apply expand-animation;
-            &.current-theme-btn {
-                @apply before:scale-100 before:opacity-100 before:bg-[var(--btn-plain-bg-hover)] text-[var(--primary)]
-            }
-        }
+        text-[var(--text-secondary)] hover:text-[var(--text-primary)];
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
+    }
+    .btn-plain:hover {
+        background: transparent;
+    }
+    .btn-plain.scale-animation.current-theme-btn {
+        @apply text-[var(--text-primary)];
     }
     .btn-regular {
         @apply transition flex items-center justify-center bg-[var(--btn-regular-bg)] hover:bg-[var(--btn-regular-bg-hover)] active:bg-[var(--btn-regular-bg-active)]
-        text-[var(--btn-content)] dark:text-white/75
+        text-[var(--btn-content)];
+        border-radius: 0;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
 
     .link-underline {
-        @apply transition underline decoration-2 decoration-dashed decoration-[var(--link-underline)]
-        hover:decoration-[var(--link-hover)] active:decoration-[var(--link-active)] underline-offset-[0.25rem]
+        @apply transition no-underline text-[var(--text-secondary)]
+        hover:text-[var(--text-primary)] active:text-[var(--accent-hover)];
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
 
     .toc-hide,
@@ -78,37 +117,37 @@
     }
 
     .text-90 {
-        @apply text-black/90 dark:text-white/90
+        @apply text-[var(--text-primary)]
     }
     .text-75 {
-        @apply text-black/75 dark:text-white/75
+        @apply text-[var(--text-secondary)]
     }
     .text-50 {
-        @apply text-black/50 dark:text-white/50
+        @apply text-[var(--text-muted)]
     }
     .text-30 {
-        @apply text-black/30 dark:text-white/30
+        @apply text-[var(--text-muted)]
     }
     .text-25 {
-        @apply text-black/25 dark:text-white/25
+        @apply text-[var(--text-muted)]
     }
 
     .meta-icon {
-        @apply w-8 h-8 transition rounded-md flex items-center justify-center bg-[var(--btn-regular-bg)]
-        text-[var(--btn-content)] mr-2
+        @apply hidden;
     }
     .with-divider {
-        @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-[var(--meta-divider)] before:text-sm
-        before:font-medium before:first-of-type:hidden before:transition
+        @apply before:content-['·'] before:mx-2 before:text-[var(--text-muted)] before:text-sm
+        before:font-normal before:first-of-type:hidden before:transition
     }
 
     .btn-regular-dark {
-        @apply flex items-center justify-center
-        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
-        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))]
+        @apply flex items-center justify-center bg-[#1a1a1a] hover:bg-[#222222] active:bg-[#2a2a2a];
+        border-radius: 0;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-ease);
     }
     .btn-regular-dark.success {
-        @apply bg-[oklch(0.75_0.14_var(--hue))] dark:bg-[oklch(0.75_0.14_var(--hue))]
+        @apply bg-[#2a2a2a]
     }
 }
 
@@ -130,9 +169,9 @@
     width: 10%;
     height: 100%;
     left: calc(50% - 1px);
-    border-left: 2px dashed var(--line-color);
+    border-left: 1px solid var(--line-color);
     pointer-events: none;
-    transition: all 0.3s;
+    transition: all var(--transition-duration) var(--transition-ease);
     transform: translateY(-50%);
 }
 
@@ -141,7 +180,8 @@
 }
 
 .custom-md spoiler {
-  @apply bg-[var(--codeblock-bg)] hover:bg-transparent px-1 py-0.5 overflow-hidden rounded-md transition-all duration-150;
+  @apply bg-[var(--codeblock-bg)] hover:bg-transparent px-1 py-0.5 overflow-hidden transition-all;
+  transition-duration: var(--transition-duration);
 
   &:not(:hover) {
     color: var(--codeblock-bg);

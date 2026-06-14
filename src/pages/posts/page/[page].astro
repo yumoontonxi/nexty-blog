@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths } from "astro";
+import Pagination from "@components/control/Pagination.astro";
+import PostPage from "@components/PostPage.astro";
+import { PAGE_SIZE } from "@constants/constants";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import {
+	getMergedPosts,
+	paginateUnifiedPosts,
+} from "@utils/posts-merge";
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+	const allPosts = await getMergedPosts();
+	const lastPage = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+
+	return Array.from({ length: lastPage - 1 }, (_, index) => {
+		const currentPage = index + 2;
+		return {
+			params: { page: String(currentPage) },
+			props: {
+				page: paginateUnifiedPosts(allPosts, PAGE_SIZE, currentPage),
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<MainGridLayout title={i18n(I18nKey.posts)} description={i18n(I18nKey.posts)}>
+    <div class="page-shell flex min-h-[calc(100vh-200px)] flex-1 flex-grow flex-col">
+        <header class="mb-8">
+            <h1 class="text-2xl font-light tracking-wide text-[var(--text-primary)]">
+                {i18n(I18nKey.posts)}
+            </h1>
+        </header>
+
+        <div class="flex-1 rounded-lg bg-[var(--bg-primary)]">
+            <PostPage page={page}></PostPage>
+        </div>
+
+        <Pagination class="mx-auto mt-8" page={page} basePath="/posts/"></Pagination>
+    </div>
+</MainGridLayout>

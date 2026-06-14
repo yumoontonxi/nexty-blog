@@ -4,6 +4,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
+import GlobalStyles from "@components/GlobalStyles.astro";
+import PostsLoadingSkeleton from "@components/PostsLoadingSkeleton.astro";
 import { profileConfig, siteConfig } from "@/config";
 import {
 	AUTO_MODE,
@@ -73,10 +75,11 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
+<html lang={siteLang} class="dark bg-[var(--bg)] transition text-[14px] md:text-[16px] font-sans"
 	  data-overlayscrollbars-initialize
 >
 	<head>
+		<GlobalStyles />
 
 		<title>{pageTitle}</title>
 
@@ -148,10 +151,11 @@ const bannerOffset =
 		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
 
 	</head>
-	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
+	<body class="flex min-h-screen flex-col transition bg-[var(--bg)] text-[var(--text-primary)] antialiased" class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner, "is-home": isHomePage}]}
 		  data-overlayscrollbars-initialize
 	>
 		<ConfigCarrier></ConfigCarrier>
+		<PostsLoadingSkeleton />
 		<slot />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
@@ -189,7 +193,7 @@ const bannerOffset =
 		@apply top-[calc(1rem_-_var(--banner-height-extend))]
 	}
 	.navbar-hidden {
-		@apply opacity-0 -translate-y-16
+		@apply opacity-0 pointer-events-none
 	}
 }
 </style>

@@ -1,0 +1,38 @@
+---
+import Pagination from "@components/control/Pagination.astro";
+import PostPage from "@components/PostPage.astro";
+import { PAGE_SIZE } from "@constants/constants";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import {
+	getMergedPosts,
+	paginateUnifiedPosts,
+} from "@utils/posts-merge";
+
+export const prerender = true;
+
+const allPosts = await getMergedPosts();
+const localCount = allPosts.filter((post) => post.source === "local").length;
+const notionCount = allPosts.filter((post) => post.source === "notion").length;
+const page = paginateUnifiedPosts(allPosts, PAGE_SIZE, 1);
+---
+
+<MainGridLayout title={i18n(I18nKey.posts)} description={i18n(I18nKey.posts)}>
+    <div class="page-shell flex min-h-[calc(100vh-200px)] flex-1 flex-grow flex-col">
+        <header class="mb-8">
+            <h1 class="text-2xl font-light tracking-wide text-[var(--text-primary)]">
+                {i18n(I18nKey.posts)}
+            </h1>
+            <p class="mt-2 text-sm text-[var(--text-tertiary)]">
+                本地 Markdown {localCount} 篇 · Notion 随笔 {notionCount} 篇 · 共 {allPosts.length} 篇
+            </p>
+        </header>
+
+        <div class="flex-1 rounded-lg bg-[var(--bg-primary)]">
+            <PostPage page={page}></PostPage>
+        </div>
+
+        <Pagination class="mx-auto mt-8" page={page} basePath="/posts/"></Pagination>
+    </div>
+</MainGridLayout>

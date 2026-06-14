@@ -1,0 +1,11 @@
+---
+import Hero from "../components/Hero.astro";
+import Layout from "../layouts/Layout.astro";
+import { getHeroSlides } from "../utils/hero-utils";
+
+const heroSlides = await getHeroSlides();
+---
+
+<Layout>
+    <Hero slides={heroSlides} />
+</Layout>

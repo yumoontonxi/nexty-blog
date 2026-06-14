@@ -3,27 +3,14 @@ import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 import { getCategoryList } from "../../utils/content-utils";
 import ButtonLink from "../control/ButtonLink.astro";
-import WidgetLayout from "./WidgetLayout.astro";
 
 const categories = await getCategoryList();
-
-const COLLAPSED_HEIGHT = "7.5rem";
-const COLLAPSE_THRESHOLD = 5;
-
-const isCollapsed = categories.length >= COLLAPSE_THRESHOLD;
-
-interface Props {
-	class?: string;
-	style?: string;
-}
-const className = Astro.props.class;
-const style = Astro.props.style;
 ---
 
-<WidgetLayout name={i18n(I18nKey.categories)} id="categories" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT}
-                class={className} style={style}
->
-    {categories.map((c) =>
+<div class="category-list">
+    <div class="category-label">{i18n(I18nKey.categories)}</div>
+    <div class="category-divider"></div>
+    {categories.map((c) => (
         <ButtonLink
             url={c.url}
             badge={String(c.count)}
@@ -31,5 +18,27 @@ const style = Astro.props.style;
         >
             {c.name.trim()}
         </ButtonLink>
-    )}
-</WidgetLayout>
+    ))}
+</div>
+
+<style>
+    .category-list {
+        margin-top: 32px;
+    }
+
+    .category-label {
+        font-family: var(--font-text);
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        margin-bottom: 8px;
+    }
+
+    .category-divider {
+        height: 1px;
+        background: var(--border-subtle);
+        margin-bottom: 0;
+    }
+</style>

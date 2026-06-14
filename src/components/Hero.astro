@@ -1,0 +1,650 @@
+---
+import Navbar from "./Navbar.astro";
+import type { HeroSlide } from "../utils/hero-utils";
+import { url } from "../utils/url-utils";
+
+interface Props {
+	slides?: HeroSlide[];
+}
+
+const title = "Nexty";
+const slogan = "大地从不喧哗，但她孕育万物。仅以我的视角，留下一些真实的痕迹……";
+const { slides = [] } = Astro.props;
+const hasSlides = slides.length > 0;
+---
+
+<section
+  class="hero relative h-screen w-full overflow-hidden bg-[var(--bg-base)]"
+  aria-label="Site introduction"
+>
+  {!hasSlides && (
+    <canvas
+      id="nexty-hero-canvas"
+      class="absolute top-0 left-0 z-0 block h-full w-full pointer-events-none"
+    ></canvas>
+  )}
+
+  <div
+    class="hero-overlay absolute inset-0 z-[1] pointer-events-none"
+    aria-hidden="true"
+  ></div>
+
+  {hasSlides && (
+    <div id="hero-track-wrapper">
+      <div id="hero-track">
+        {slides.map((slide) => (
+          <a class="hero-slide" href={slide.href}>
+            <img src={slide.image} alt={slide.title} loading="eager" decoding="async" />
+            {slide.caption && <div class="slide-caption">{slide.caption}</div>}
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <Navbar floating />
+
+  <div class="hero-content absolute inset-0 z-10 flex flex-col items-center justify-center -mt-[5vh]">
+    <div id="hero-text">
+      <h1 class="hero-title">{title}</h1>
+      <p class="hero-slogan">{slogan}</p>
+    </div>
+  </div>
+
+  <div id="hero-footer">
+    <div id="hero-copyright">
+      <span>© 2026 Ytx. 保留所有权利。</span>
+      <a href={url("rss.xml")}>RSS</a>
+      <span>·</span>
+      <a href={url("sitemap-index.xml")}>站点地图</a>
+      <br />
+      <span>Powered by Ytx &amp; apple &amp; Gemini</span>
+    </div>
+    <a href={url("/posts/")} id="hero-enter">ENTER →</a>
+  </div>
+</section>
+
+<style>
+  .hero-overlay {
+    background: var(--hero-overlay);
+  }
+
+  #hero-track-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-55%);
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: auto;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.6) 8%,
+      black 20%,
+      black 80%,
+      rgba(0, 0, 0, 0.6) 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.6) 8%,
+      black 20%,
+      black 80%,
+      rgba(0, 0, 0, 0.6) 92%,
+      transparent 100%
+    );
+  }
+
+  #hero-track-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45%;
+    height: 100%;
+    backdrop-filter: blur(6px) brightness(0.6);
+    -webkit-backdrop-filter: blur(6px) brightness(0.6);
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 20%,
+      black 80%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 20%,
+      black 80%,
+      transparent 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #hero-track {
+    display: flex;
+    gap: 24px;
+    padding: 0 15vw;
+    will-change: transform;
+    pointer-events: auto;
+  }
+
+  .hero-slide {
+    position: relative;
+    flex-shrink: 0;
+    width: 65vw;
+    height: 42vh;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .slide-caption {
+    position: absolute;
+    bottom: 16px;
+    left: 20px;
+    right: 20px;
+    font-family: var(--font-text);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    z-index: 2;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  #hero-text {
+    position: relative;
+    z-index: 10;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+  }
+
+  #hero-footer {
+    position: absolute;
+    bottom: 28px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 10;
+  }
+
+  #hero-copyright {
+    font-family: var(--font-text);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.03em;
+    line-height: 1.8;
+  }
+
+  #hero-copyright a {
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    margin: 0 4px;
+    transition: color 0.3s ease;
+  }
+
+  #hero-copyright a:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  #hero-enter {
+    font-family: var(--font-text);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  #hero-enter:hover {
+    color: #ffffff;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-hero);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    background: linear-gradient(160deg, #8b4a4a 0%, #c8a0a0 45%, #f5f5f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+  }
+
+  .hero-slogan {
+    font-family: var(--font-text);
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.05em;
+    margin: 24px 0 0;
+    text-align: center;
+    max-width: 90%;
+  }
+
+  @media (max-width: 767px) {
+    .hero-title {
+      font-size: var(--font-size-hero-mobile);
+    }
+
+    #hero-footer {
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+</style>
+
+{hasSlides && (
+  <script is:inline>
+    (function initHeroCarouselModule() {
+      const SLIDE_SPEED = 40;
+      let animId = null;
+
+      function cleanup(instance) {
+        if (!instance) return;
+        if (instance.animId) cancelAnimationFrame(instance.animId);
+        if (instance.wheelHandler) {
+          instance.wrapper.removeEventListener("wheel", instance.wheelHandler);
+        }
+        if (instance.mouseEnterHandler) {
+          instance.wrapper.removeEventListener("mouseenter", instance.mouseEnterHandler);
+        }
+        if (instance.mouseLeaveHandler) {
+          instance.wrapper.removeEventListener("mouseleave", instance.mouseLeaveHandler);
+        }
+        if (instance.visibilityHandler) {
+          document.removeEventListener("visibilitychange", instance.visibilityHandler);
+        }
+      }
+
+      function boot() {
+        const track = document.getElementById("hero-track");
+        const wrapper = document.getElementById("hero-track-wrapper");
+        if (!track || !wrapper) return;
+
+        cleanup(window.__heroCarousel);
+
+        let offset = 0;
+        let isPaused = false;
+        let lastTime = null;
+
+        function getSlideWidth() {
+          const slide = track.querySelector(".hero-slide:not(.clone)");
+          if (!slide) return window.innerWidth * 0.65 + 24;
+          return slide.offsetWidth + 24;
+        }
+
+        function getTotalWidth() {
+          const slides = track.querySelectorAll(".hero-slide:not(.clone)");
+          return slides.length * getSlideWidth();
+        }
+
+        function normalizeOffset() {
+          const total = getTotalWidth();
+          if (total <= 0) return;
+          if (offset < 0) offset += total;
+          if (offset >= total) offset -= total;
+        }
+
+        function animate(ts) {
+          if (lastTime === null) lastTime = ts;
+          const delta = ts - lastTime;
+          lastTime = ts;
+
+          if (!isPaused) {
+            offset += SLIDE_SPEED * (delta / 1000);
+            normalizeOffset();
+          }
+
+          track.style.transform = `translateX(${-offset}px)`;
+          instance.animId = requestAnimationFrame(animate);
+        }
+
+        if (!track.querySelector(".hero-slide.clone")) {
+          const origSlides = Array.from(
+            track.querySelectorAll(".hero-slide:not(.clone)"),
+          );
+          origSlides.forEach((slide) => {
+            const clone = slide.cloneNode(true);
+            clone.classList.add("clone");
+            track.appendChild(clone);
+          });
+        }
+
+        track.style.pointerEvents = "auto";
+        wrapper.style.pointerEvents = "auto";
+
+        const instance = {
+          wrapper,
+          animId: null,
+          wheelHandler: null,
+          mouseEnterHandler: null,
+          mouseLeaveHandler: null,
+          visibilityHandler: null,
+        };
+
+        instance.mouseEnterHandler = () => {
+          isPaused = true;
+        };
+
+        instance.mouseLeaveHandler = () => {
+          isPaused = false;
+          lastTime = null;
+        };
+
+        instance.wheelHandler = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          offset += e.deltaY * 0.8;
+          normalizeOffset();
+        };
+
+        instance.visibilityHandler = () => {
+          if (document.hidden) {
+            if (instance.animId) cancelAnimationFrame(instance.animId);
+            lastTime = null;
+          } else {
+            lastTime = null;
+            instance.animId = requestAnimationFrame(animate);
+          }
+        };
+
+        wrapper.addEventListener("mouseenter", instance.mouseEnterHandler);
+        wrapper.addEventListener("mouseleave", instance.mouseLeaveHandler);
+        wrapper.addEventListener("wheel", instance.wheelHandler, { passive: false });
+        document.addEventListener("visibilitychange", instance.visibilityHandler);
+
+        window.__heroCarousel = instance;
+        lastTime = null;
+        instance.animId = requestAnimationFrame(animate);
+      }
+
+      boot();
+      document.addEventListener("astro:page-load", boot);
+    })();
+  </script>
+)}
+
+{!hasSlides && (
+<script>
+/**
+ * Nexty Hero Background Canvas
+ * 
+ * 粒子沿严格从屏幕左上角到右下角的方向运动
+ * 流星雨粒子轨迹覆盖整个屏幕直至右下角
+ */
+(() => {
+  const canvas = document.getElementById("nexty-hero-canvas");
+  if (!canvas) return;
+
+  let dpr = window.devicePixelRatio || 1;
+  let w = 0, h = 0;
+  let ctx = canvas.getContext("2d");
+
+  // 定义色调
+  const COLORS = [
+    "rgba(255,255,255,0.75)",        // 近白
+    "rgba(255,242,246,0.85)",        // very pale rose
+    "rgba(245,180,180,0.50)",        // 淡暖红/淡玫瑰
+    "rgba(255,230,220,0.38)"         // 极淡暖, 拖尾
+  ];
+
+  // 细微控制色彩
+  function getTrailColor(t) {
+    // t: [0,1], 头->尾
+    if (t < 0.35) return COLORS[0];
+    if (t < 0.7) return COLORS[1];
+    if (t < 0.95) return COLORS[2];
+    return COLORS[3];
+  }
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement?.getBoundingClientRect() || canvas.getBoundingClientRect();
+    w = Math.round(rect.width * dpr);
+    h = Math.round(rect.height * dpr);
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // 计算左上到右下的单位方向向量
+  function getMainDirection() {
+    const angle = Math.atan2(h, w); // from (0,0) to (w,h)
+    return {
+      angle,
+      dx: Math.cos(angle),
+      dy: Math.sin(angle)
+    }
+  }
+
+  // ========== 粒子系统 ==========
+  // 流星: 主是细长矩形, 少数为圆点
+  class Meteor {
+    constructor(opt={}) {
+      const { angle, dx, dy } = getMainDirection();
+
+      this.direction = angle;
+
+      // 扩大 margin, 保证流星起点基本都离边界更远，出现位置更靠左上，确保飞完整个屏幕
+      const margin = Math.max(w, h) * 0.22;
+      this.x = opt.x ?? (Math.random() * margin - margin * 0.95);
+      this.y = opt.y ?? (Math.random() * margin - margin * 0.95);
+
+      // 降低速度，延长在屏幕中的时间
+      const spd = (1.2 + Math.random() * 0.5) * dpr;
+      this.vx = spd * dx;
+      this.vy = spd * dy;
+
+      // 延长流星长度
+      this.len = opt.len ?? (w > 600 ? (190 + Math.random() * 120) : (90 + Math.random() * 40));
+      this.width = opt.width ?? (2.05 + Math.random() * 0.7);
+      this.angle = angle; // 固定成左上到右下
+      this.alpha = opt.alpha ?? (0.45 + Math.random() * 0.23);
+      this.color = opt.color ?? getTrailColor(Math.random());
+      this.tailFade = 0.93 + Math.random() * 0.045;
+      this.life = 0;
+
+      // 使最大寿命明显延长，确保流星贯穿整个屏幕
+      // 寿命 = 跑完全屏所需时间 + 适当随机量，可通过 x/vx, y/vy 算出，但粗略设长一些
+      // 流星起点 margin 外，终点到右下加上len的外边距
+      const screenDist = Math.sqrt((w + this.len - this.x) ** 2 + (h + this.len - this.y) ** 2);
+      const avgV = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      this.maxLife = (screenDist / avgV) / 60 + 0.8 + Math.random() * 1.2;
+
+      // 延迟可再略微拉大
+      this.appearDelay = opt.appearDelay ?? (Math.random() * 2.2);
+      this._inited = false;
+      this.type = opt.type ?? (Math.random() < 0.78 ? "line" : "dot");
+    }
+    reset() {
+      const { angle, dx, dy } = getMainDirection();
+      this.direction = angle;
+      const margin = Math.max(w, h) * 0.22;
+      this.x = (Math.random() * margin - margin * 0.95);
+      this.y = (Math.random() * margin - margin * 0.95);
+
+      const spd = (1.2 + Math.random() * 0.5) * dpr;
+      this.vx = spd * dx;
+      this.vy = spd * dy;
+      this.len = w > 600 ? (170 + Math.random() * 100) : (80 + Math.random() * 40);
+      this.width = 2.05 + Math.random() * 0.7;
+      this.angle = angle;
+      this.alpha = 0.44 + Math.random() * 0.12;
+      this.color = getTrailColor(Math.random());
+      this.tailFade = 0.93 + Math.random() * 0.055;
+      this.life = 0;
+
+      const screenDist = Math.sqrt((w + this.len - this.x) ** 2 + (h + this.len - this.y) ** 2);
+      const avgV = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      this.maxLife = (screenDist / avgV) / 60 + 0.8 + Math.random() * 1.2;
+
+      this.appearDelay = Math.random() * 2.8;
+      this.type = Math.random() < 0.8 ? "line" : "dot";
+      this._inited = true;
+    }
+    update(dt) {
+      if (!this._inited) this._inited = true;
+      if (this.appearDelay > 0) {
+        this.appearDelay -= dt;
+        return;
+      }
+      this.life += dt;
+      this.x += this.vx * dt * 60;
+      this.y += this.vy * dt * 60;
+
+      // 只要头部或者尾部进入(或者完全超出)屏幕右下外都被判定消失
+      if (
+        (this.x > w + this.len || this.y > h + this.len) ||
+        this.life > this.maxLife
+      ) {
+        this.reset();
+      }
+    }
+    draw(ctx) {
+      if (this.appearDelay > 0) return;
+      ctx.save();
+      if (this.type === "line") {
+        // 计算起点和终点
+        let tail = this.len * 0.82;
+        let x0 = this.x, y0 = this.y;
+        let x1 = x0 - Math.cos(this.angle) * tail;
+        let y1 = y0 - Math.sin(this.angle) * tail;
+
+        // 渐变，边缘柔化淡出
+        let grad = ctx.createLinearGradient(x0, y0, x1, y1);
+        grad.addColorStop(0, `${this.color.replace(/[\d.]+\)$/,"1)")}`);
+        grad.addColorStop(0.1, `${this.color.replace(/[\d.]+\)$/,"0.73)")}`);
+        grad.addColorStop(0.25, `${this.color.replace(/[\d.]+\)$/,"0.33)")}`);
+        grad.addColorStop(1, "rgba(250,215,230,0)");
+
+        ctx.globalAlpha = this.alpha;
+        ctx.globalCompositeOperation = "lighter";
+        ctx.strokeStyle = grad;
+        ctx.lineCap = "round";
+        ctx.lineWidth = this.width * dpr;
+
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+
+        // 矩形淡尾影
+        for (let t = 0.2; t < 1; t += 0.16) {
+          let f = 0.38 * (1-t);
+          ctx.globalAlpha = this.alpha * f;
+          ctx.beginPath();
+          ctx.moveTo(x0 - (x0-x1)*t, y0 - (y0-y1)*t);
+          ctx.lineTo(
+            x0 - (x0-x1)*t - Math.cos(this.angle)*12,
+            y0 - (y0-y1)*t - Math.sin(this.angle)*12
+          );
+          ctx.stroke();
+        }
+      } else {
+        // dot type: 模糊淡淡的圆点
+        let r = (6.5 + Math.random() * 5) * dpr;
+        let g = ctx.createRadialGradient(this.x, this.y, 0.8, this.x, this.y, r);
+        g.addColorStop(0, COLORS[1]);
+        g.addColorStop(0.35, COLORS[0]);
+        g.addColorStop(0.99, "rgba(255,242,250,0)");
+        ctx.globalAlpha = this.alpha * 0.97;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.globalCompositeOperation = "lighter";
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  // 星点背景，静态很淡
+  const starCount = w > 700 ? 38 : 24;
+  const bgStars = Array.from({length: starCount}, () => ({
+    x: Math.random(), y: Math.random(),
+    size: (Math.random() * 1.3 + 0.5) * dpr,
+    a: Math.random() * 0.13 + 0.04
+  }));
+
+  // 主流星群
+  const metCount = w > 700 ? 12 : 7;
+  let meteors = [];
+  function resetSprites() {
+    meteors = [];
+    for(let i=0; i<metCount; ++i)
+      meteors.push(new Meteor({}));
+  }
+  resetSprites();
+
+  // 适应窗口变化
+  let lastW = w, lastH = h;
+  function checkResize() {
+    if (w !== lastW || h !== lastH) {
+      lastW = w; lastH = h;
+      resetSprites();
+    }
+  }
+
+  // ========== 渲染主循环 ==========
+  let lastT = performance.now();
+  function render(now) {
+    let dt = Math.min((now - lastT) / 1000, 0.07) || 0.0167;
+    lastT = now;
+
+    checkResize();
+
+    // 半透明黑色背景，不要全遮
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#120D0D";
+    ctx.fillRect(0, 0, w, h);
+
+    // 背景微光点
+    for (let s of bgStars) {
+      ctx.globalAlpha = s.a + Math.sin(now * 0.0004 + s.x * 43) * 0.045;
+      ctx.fillStyle = "rgba(245,233,236,1)";
+      ctx.beginPath();
+      ctx.arc(s.x * w, s.y * h, s.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // 流星
+    for (let m of meteors) {
+      m.update(dt);
+      m.draw(ctx);
+    }
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
+)}

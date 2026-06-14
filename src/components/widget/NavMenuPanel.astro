@@ -9,24 +9,40 @@ interface Props {
 
 const links = Astro.props.links;
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute transition-all fixed right-4 px-2 py-2"]}>
+<div id="nav-menu-panel" class="nav-menu-panel float-panel float-panel-closed fixed right-4 top-14 min-w-[12rem] px-4 py-3 md:hidden">
     {links.map((link) => (
-        <a href={link.external ? link.url : url(link.url)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8
-            hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition
-        "
-           target={link.external ? "_blank" : null}
+        <a
+            href={link.external ? link.url : url(link.url)}
+            class="nav-menu-link"
+            target={link.external ? "_blank" : null}
         >
-            <div class="transition text-black/75 dark:text-white/75 font-bold group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
-                {link.name}
-            </div>
-            {!link.external && <Icon name="material-symbols:chevron-right-rounded"
-                  class="transition text-[1.25rem] text-[var(--primary)]"
-            >
-            </Icon>}
-            {link.external && <Icon name="fa6-solid:arrow-up-right-from-square"
-                  class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
-            >
-            </Icon>}
+            <span>{link.name}</span>
+            {!link.external && <Icon name="material-symbols:chevron-right-rounded" class="text-base opacity-40" />}
+            {link.external && <Icon name="fa6-solid:arrow-up-right-from-square" class="text-xs opacity-40" />}
         </a>
     ))}
 </div>
+
+<style>
+    .nav-menu-panel {
+        background: var(--bg-primary, #ffffff);
+        border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.1));
+        border-radius: var(--search-radius, 10px);
+    }
+
+    .nav-menu-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-family: var(--font-text);
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color var(--duration-fast) ease;
+    }
+
+    .nav-menu-link:hover {
+        color: var(--text-primary);
+    }
+</style>

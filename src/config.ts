@@ -9,7 +9,7 @@ import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
 	title: "Nexty",
-	subtitle: "大地从不喧哗，但她孕育万物。文字是我埋下的种子，不知会长出什么。",
+	subtitle: "大地从不喧哗，但她孕育万物。仅以我的视角，留下一些真实的痕迹。",
 	lang: "zh_CN",
 	themeColor: {
 		hue: 250,
@@ -35,14 +35,14 @@ export const siteConfig: SiteConfig = {
 export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
-		LinkPreset.Archive,
+		LinkPreset.Gallery,
 		LinkPreset.About,
 	],
 };
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/demo-avatar.jpg",
-	name: "Ytx",
+	name: "China Ytx",
 	bio: "大地从不喧哗，但她孕育万物。",
 	links: [
 		{

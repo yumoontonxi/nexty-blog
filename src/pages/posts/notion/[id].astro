@@ -1,0 +1,15 @@
+---
+import { getNotionPosts } from "@utils/notion";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const posts = await getNotionPosts();
+	return posts.map((post) => ({
+		params: { id: post.id.replace(/-/g, "") },
+	}));
+}
+
+const { id } = Astro.params;
+return Astro.redirect(`/notion/${id}/`);
+---
